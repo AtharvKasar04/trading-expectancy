@@ -56,6 +56,11 @@ export const InputPanel: React.FC<InputPanelProps> = ({ inputs, onChange }) => {
                         <span>50%</span>
                         <span>100%</span>
                     </div>
+                    {inputs.winRate > 85 && (
+                        <div className="mt-2 text-sm text-yellow-400 font-medium animate-pulse">
+                            Brooo, that's great
+                        </div>
+                    )}
                 </div>
 
                 {/* Loss Rate (Read-only) */}
@@ -87,7 +92,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({ inputs, onChange }) => {
                 {/* Reward to Risk */}
                 <div>
                     <label className="block text-sm font-medium text-gray-300 mb-1">
-                        Average Reward-to-Risk (R:R)
+                        Risk to Reward
                     </label>
                     <input
                         type="number"
@@ -98,6 +103,11 @@ export const InputPanel: React.FC<InputPanelProps> = ({ inputs, onChange }) => {
                         placeholder="e.g. 1.5, 2, 3..."
                         className="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                     />
+                    {inputs.rewardToRisk > 10 && (
+                        <div className="mt-2 text-sm text-yellow-400 font-medium animate-pulse">
+                            You serious bro 🤨???
+                        </div>
+                    )}
                 </div>
 
                 {/* Trade Frequency */}

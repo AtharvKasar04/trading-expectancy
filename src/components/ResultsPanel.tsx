@@ -43,7 +43,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, inputs }) =
                     <div className="text-xl font-semibold text-white">{inputs.riskPerTrade}%</div>
                 </div>
                 <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">
-                    <div className="text-gray-400 text-sm mb-1">Reward:Risk</div>
+                    <div className="text-gray-400 text-sm mb-1">Risk:Reward</div>
                     <div className="text-xl font-semibold text-white">{inputs.rewardToRisk}</div>
                 </div>
             </div>
