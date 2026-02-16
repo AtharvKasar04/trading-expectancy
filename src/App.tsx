@@ -34,6 +34,12 @@ function App() {
             <ResultsPanel results={results} inputs={inputs} />
           </div>
         </div>
+
+        <div className="mt-10 text-center">
+          <p className="text-gray-500 text-sm">
+            Made by Atharv Kasar
+          </p>
+        </div>
       </div>
     </div>
   );

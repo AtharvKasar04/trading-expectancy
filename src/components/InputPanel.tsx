@@ -41,7 +41,22 @@ export const InputPanel: React.FC<InputPanelProps> = ({ inputs, onChange }) => {
                         <label className="block text-sm font-medium text-gray-300">
                             Win Rate (%)
                         </label>
-                        <span className="text-sm text-blue-400 font-mono">{inputs.winRate}%</span>
+                        <div className="flex items-center space-x-2">
+                            <input
+                                type="number"
+                                min="0"
+                                max="100"
+                                value={inputs.winRate}
+                                onChange={(e) => {
+                                    let val = parseFloat(e.target.value);
+                                    if (val < 0) val = 0;
+                                    if (val > 100) val = 100;
+                                    handleChange('winRate', val || 0);
+                                }}
+                                className="w-20 bg-gray-900 border border-gray-600 rounded-md px-2 py-1 text-right text-blue-400 font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                            />
+                            <span className="text-sm text-gray-400">%</span>
+                        </div>
                     </div>
                     <input
                         type="range"
