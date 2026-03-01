@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Header } from './components/Header';
 import { InputPanel } from './components/InputPanel';
 import { ResultsPanel } from './components/ResultsPanel';
+import { MonteCarloChart } from './components/MonteCarloChart';
 import type { CalculatorInputs } from './types';
 import { calculateResults } from './utils/calculations';
 
@@ -33,6 +34,10 @@ function App() {
           <div className="lg:col-span-7">
             <ResultsPanel results={results} inputs={inputs} />
           </div>
+        </div>
+
+        <div className="mt-8">
+          <MonteCarloChart inputs={inputs} />
         </div>
 
         <div className="mt-10 text-center">
