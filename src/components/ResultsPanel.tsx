@@ -8,88 +8,151 @@ interface ResultsPanelProps {
 }
 
 export const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, inputs }) => {
-    const isPositiveExpectancy = results.expectancyR >= 0;
-    const expectancyColor = isPositiveExpectancy ? 'text-green-400' : 'text-red-400';
-    const expectancyBg = isPositiveExpectancy ? 'bg-green-400/10' : 'bg-red-400/10';
-    const expectancyBorder = isPositiveExpectancy ? 'border-green-400/20' : 'border-red-400/20';
+    const isPos = results.expectancyR >= 0;
+    const edgeColor = isPos ? 'var(--green)' : 'var(--red)';
+    const edgeShadow = isPos ? '0 0 24px rgba(74,222,128,0.25)' : '0 0 24px rgba(239,68,68,0.25)';
+    const edgeBg = isPos ? 'rgba(74,222,128,0.06)' : 'rgba(239,68,68,0.06)';
+    const edgeBorder = isPos ? 'rgba(74,222,128,0.2)' : 'rgba(239,68,68,0.2)';
 
     return (
-        <div className="space-y-6">
-            {/* Edge Summary Card */}
-            <div className={`p-6 rounded-xl border ${expectancyBorder} ${expectancyBg} shadow-lg transition-all`}>
-                <h3 className="text-gray-300 font-medium mb-2">Expectancy per Trade</h3>
-                <div className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
-                    <span className={`text-4xl font-bold ${expectancyColor}`}>
-                        {results.expectancyR >= 0 ? '+' : ''}{fmtNumber(results.expectancyR)} R
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
+            {/* ── Expectancy hero card ── */}
+            <div
+                className="anim-fade-up anim-delay-1"
+                style={{
+                    background: edgeBg,
+                    border: `1px solid ${edgeBorder}`,
+                    borderRadius: '14px',
+                    padding: '22px 24px',
+                    boxShadow: edgeShadow,
+                    transition: 'box-shadow 0.4s',
+                }}
+            >
+                <div style={{ fontSize: '11px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
+                    Expectancy per Trade
+                </div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', flexWrap: 'wrap' }}>
+                    <span
+                        style={{
+                            fontSize: '40px', fontWeight: 800,
+                            fontFamily: "'JetBrains Mono', monospace",
+                            color: edgeColor,
+                            textShadow: edgeShadow,
+                            lineHeight: 1,
+                        }}
+                    >
+                        {isPos ? '+' : ''}{fmtNumber(results.expectancyR)} R
                     </span>
-                    <span className={`text-xl ${expectancyColor}`}>
-                        ({results.expectancyPercent >= 0 ? '+' : ''}{fmtNumber(results.expectancyPercent)}%)
+                    <span style={{ fontSize: '18px', color: edgeColor, opacity: 0.75 }}>
+                        ({isPos ? '+' : ''}{fmtNumber(results.expectancyPercent)}%)
                     </span>
+                </div>
+                <div style={{ marginTop: '10px', fontSize: '12px', color: 'var(--muted)' }}>
+                    {isPos
+                        ? 'Positive edge — keep refining your system'
+                        : 'Negative edge — review your R:R or win rate'}
                 </div>
             </div>
 
-            {/* Win/Loss Info */}
-            <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">
-                    <div className="text-gray-400 text-sm mb-1">Win Rate</div>
-                    <div className="text-xl font-semibold text-white">{inputs.winRate}%</div>
-                </div>
-                <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">
-                    <div className="text-gray-400 text-sm mb-1">Loss Rate</div>
-                    <div className="text-xl font-semibold text-white">{results.lossRate}%</div>
-                </div>
-                <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">
-                    <div className="text-gray-400 text-sm mb-1">Risk per Trade</div>
-                    <div className="text-xl font-semibold text-white">{inputs.riskPerTrade}%</div>
-                </div>
-                <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">
-                    <div className="text-gray-400 text-sm mb-1">Risk:Reward</div>
-                    <div className="text-xl font-semibold text-white">{inputs.rewardToRisk}</div>
-                </div>
+            {/* ── Stat chips grid ── */}
+            <div
+                className="anim-fade-up anim-delay-2"
+                style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}
+            >
+                {[
+                    { label: 'Win Rate', value: `${inputs.winRate}%`, color: 'var(--green)' },
+                    { label: 'Loss Rate', value: `${results.lossRate}%`, color: 'var(--red)' },
+                    { label: 'Risk / Trade', value: `${inputs.riskPerTrade}%`, color: 'var(--amber)' },
+                    { label: 'R : Reward', value: `1 : ${inputs.rewardToRisk}`, color: 'var(--blue)' },
+                ].map(({ label, value, color }) => (
+                    <div key={label} className="stat-chip">
+                        <div style={{ fontSize: '11px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '4px' }}>
+                            {label}
+                        </div>
+                        <div style={{ fontSize: '20px', fontWeight: 700, color, fontFamily: "'JetBrains Mono', monospace" }}>
+                            {value}
+                        </div>
+                    </div>
+                ))}
             </div>
 
-            {/* Linear Expectation */}
-            <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg">
-                <h3 className="text-lg font-semibold text-white mb-4 border-b border-gray-700 pb-2">
-                    Linear Expectation <span className="text-xs font-normal text-gray-400 ml-2">(No Compounding)</span>
-                </h3>
-
-                <div className="space-y-4">
-                    <div>
-                        <div className="text-gray-400 text-sm mb-1">Expected Monthly Return</div>
-                        <div className="flex items-baseline gap-2">
-                            <span className="text-2xl font-bold text-white">
-                                {fmtCurrency(results.monthlyReturnLinearCurrency)}
-                            </span>
-                            <span className={`text-sm ${results.monthlyReturnLinearPercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                ({results.monthlyReturnLinearPercent >= 0 ? '+' : ''}{fmtNumber(results.monthlyReturnLinearPercent)}%)
-                            </span>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div className="text-gray-400 text-sm mb-1">Expected Yearly Return</div>
-                        <div className="flex items-baseline gap-2">
-                            <span className="text-2xl font-bold text-white">
-                                {fmtCurrency(results.yearlyReturnLinearCurrency)}
-                            </span>
-                            <span className={`text-sm ${results.yearlyReturnLinearPercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                ({results.yearlyReturnLinearPercent >= 0 ? '+' : ''}{fmtNumber(results.yearlyReturnLinearPercent)}%)
-                            </span>
-                        </div>
-                    </div>
+            {/* ── Linear Expectation card ── */}
+            <div className="card anim-fade-up anim-delay-3">
+                {/* Card header */}
+                <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '12px', marginBottom: '16px' }}>
+                    <h3 style={{ color: 'var(--text)', fontSize: '15px', fontWeight: 700, margin: 0 }}>
+                        Linear Expectation
+                    </h3>
+                    <span style={{ fontSize: '11px', color: 'var(--muted)' }}>No compounding · simple projection</span>
                 </div>
-                <p className="text-xs text-gray-500 mt-4">
-                    Assumes simple sum of expected returns per trade.
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <ReturnRow
+                        label="Monthly Return"
+                        currency={results.monthlyReturnLinearCurrency}
+                        percent={results.monthlyReturnLinearPercent}
+                        fmtCurrency={fmtCurrency}
+                        fmtNumber={fmtNumber}
+                    />
+                    <div style={{ height: '1px', background: 'var(--border)' }} />
+                    <ReturnRow
+                        label="Yearly Return"
+                        currency={results.yearlyReturnLinearCurrency}
+                        percent={results.yearlyReturnLinearPercent}
+                        fmtCurrency={fmtCurrency}
+                        fmtNumber={fmtNumber}
+                    />
+                </div>
+
+                <p style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '14px', marginBottom: 0 }}>
+                    Simple sum of expected return per trade — no reinvestment.
                 </p>
             </div>
 
+            {/* ── Frequency footer ── */}
+            <div
+                className="anim-fade-up anim-delay-4"
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    background: 'var(--surface2)',
+                    border: '1px solid var(--border)',
+                    borderRadius: '10px',
+                    padding: '10px 16px',
+                    fontSize: '12px',
+                    color: 'var(--muted)',
+                }}
+            >
+                <span><strong style={{ color: 'var(--text)' }}>{results.totalTradesPerMonth}</strong> trades / month</span>
+                <span><strong style={{ color: 'var(--text)' }}>{results.totalTradesPerYear}</strong> trades / year</span>
+            </div>
+        </div>
+    );
+};
 
-
-            {/* Trade Frequency Summary */}
-            <div className="flex justify-between text-xs text-gray-500 px-2">
-                <span>Trades/Month: {results.totalTradesPerMonth}</span>
-                <span>Trades/Year: {results.totalTradesPerYear}</span>
+// Sub-component for a single return row
+const ReturnRow: React.FC<{
+    label: string;
+    currency: number;
+    percent: number;
+    fmtCurrency: (n: number) => string;
+    fmtNumber: (n: number) => string;
+}> = ({ label, currency, percent, fmtCurrency, fmtNumber }) => {
+    const isPos = currency >= 0;
+    const color = isPos ? 'var(--green)' : 'var(--red)';
+    return (
+        <div>
+            <div style={{ fontSize: '11px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>
+                {label}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: '26px', fontWeight: 800, color, fontFamily: "'JetBrains Mono', monospace" }}>
+                    {fmtCurrency(currency)}
+                </span>
+                <span style={{ fontSize: '14px', color, opacity: 0.8 }}>
+                    ({isPos ? '+' : ''}{fmtNumber(percent)}%)
+                </span>
             </div>
         </div>
     );

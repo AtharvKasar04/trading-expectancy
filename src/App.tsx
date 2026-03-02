@@ -3,6 +3,8 @@ import { Header } from './components/Header';
 import { InputPanel } from './components/InputPanel';
 import { ResultsPanel } from './components/ResultsPanel';
 import { MonteCarloChart } from './components/MonteCarloChart';
+import { ProfitFactorGauge } from './components/ProfitFactorGauge';
+import { LosingStreakTable } from './components/LosingStreakTable';
 import type { CalculatorInputs } from './types';
 import { calculateResults } from './utils/calculations';
 
@@ -20,31 +22,65 @@ function App() {
   const results = useMemo(() => calculateResults(inputs), [inputs]);
 
   return (
-    <div className="min-h-screen w-full bg-[#111] text-gray-100 font-sans flex items-center justify-center p-4 md:p-8">
-      <div className="w-full max-w-6xl">
+    <div
+      style={{
+        minHeight: '100vh',
+        width: '100%',
+        backgroundColor: 'var(--bg)',
+        color: 'var(--text)',
+        padding: '32px 24px 48px',
+      }}
+    >
+      {/* Inner container — max-width to prevent ultra-wide stretch */}
+      <div style={{ maxWidth: '1320px', margin: '0 auto' }}>
+
+        {/* Header */}
         <Header />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Inputs Column */}
-          <div className="lg:col-span-5 space-y-6">
-            <InputPanel inputs={inputs} onChange={setInputs} />
-          </div>
+        {/* ── Main two-column grid ── */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'minmax(300px, 420px) 1fr',
+            gap: '20px',
+            alignItems: 'start',
+          }}
+        >
+          {/* Left: Inputs */}
+          <InputPanel inputs={inputs} onChange={setInputs} />
 
-          {/* Results Column */}
-          <div className="lg:col-span-7">
-            <ResultsPanel results={results} inputs={inputs} />
-          </div>
+          {/* Right: Results */}
+          <ResultsPanel results={results} inputs={inputs} />
         </div>
 
-        <div className="mt-8">
+        {/* ── Monte Carlo full width ── */}
+        <div style={{ marginTop: '20px' }} className="anim-fade-up anim-delay-3">
           <MonteCarloChart inputs={inputs} />
         </div>
 
-        <div className="mt-10 text-center">
-          <p className="text-gray-500 text-sm">
-            Made by Atharv Kasar
+        {/* ── Analytics row ── */}
+        <div
+          style={{
+            marginTop: '20px',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '20px',
+          }}
+          className="anim-fade-up anim-delay-4"
+        >
+          <ProfitFactorGauge inputs={inputs} />
+          <LosingStreakTable inputs={inputs} />
+        </div>
+
+        {/* Footer */}
+        <div style={{ marginTop: '36px', textAlign: 'center' }}>
+          <p style={{ color: 'var(--muted)', fontSize: '12px', margin: 0 }}>
+            Built by <span style={{ color: 'var(--text)', fontWeight: 600 }}>Atharv Kasar</span>
+            {' · '}
+            <span style={{ opacity: 0.5 }}>Not financial advice</span>
           </p>
         </div>
+
       </div>
     </div>
   );
