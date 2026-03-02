@@ -82,15 +82,8 @@ export const ProfitFactorGauge: React.FC<Props> = ({ inputs }) => {
     // Full track (t: 0 → 1)
     const trackPath = buildArc(0, 1);
 
-    // Active (colored) arc (t: 0 → fillFrac)
-    const activePath = fillFrac > 0.002 ? buildArc(0, fillFrac) : null;
-
     // Needle tip
     const needle = gaugePoint(fillFrac);
-
-    // Zone-coloured track bands for context (background gradient bands)
-    const dangerEnd = Math.min(1 / 3, fillFrac < 1 / 3 ? fillFrac : 1);   // 0 → 1/3
-    const acceptableEnd = Math.min(2 / 3, fillFrac);
 
     return (
         <div
@@ -172,7 +165,6 @@ export const ProfitFactorGauge: React.FC<Props> = ({ inputs }) => {
 
                     {/* ── Zone divider ticks ── */}
                     {[1 / 3, 2 / 3].map((t) => {
-                        const inner = gaugePoint(t);
                         // Move tick point slightly inward/outward
                         const deg = 180 + t * 180;
                         const rad = (deg * Math.PI) / 180;
